@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StaffAsia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+  <style>
+    :root {
+      --bg:       #f0f4ff;
+      --surface:  #ffffff;
+      --card:     #ffffff;
+      --card2:    #f5f7ff;
+      --border:   rgba(99,120,255,0.15);
+      --border2:  rgba(99,120,255,0.30);
+      --text:     #0a0e2a;
+      --text2:    #3a4470;
+      --text3:    #8892bb;
+      --cyan:     #0066ff;
+      --cyan2:    #004dcc;
+      --purple:   #7c3aed;
+      --green:    #00c853;
+      --amber:    #ff8f00;
+      --red:      #e63946;
+      --teal:     #0097a7;
+      --pink:     #d500f9;
+      --glow-c:   rgba(0,102,255,0.18);
+      --glow-p:   rgba(124,58,237,0.15);
+      --glow-g:   rgba(0,200,83,0.15);
+      --r:        12px;
+      --r2:       16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex; flex-direction: column;
+      min-height: 100dvh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      flex-shrink: 0;
+      background: var(--surface);
+      border-bottom: 2px solid var(--border2);
+      padding: 10px 24px 9px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 20px rgba(0,102,255,0.08);
+      position: relative;
+    }
+    .header::after {
+      content:''; position:absolute; bottom:-2px; left:0; right:0; height:2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent);
+    }
+    .hb { display:flex; align-items:center; gap:12px; }
+    .hb-logo {
+      width:46px; height:46px; border-radius:12px; flex-shrink:0;
+      background: #fff;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+      box-shadow: 0 4px 16px rgba(0,102,255,0.20);
+      border: 1.5px solid var(--border2);
+    }
+    .hb-logo img {
+      width:38px; height:38px; object-fit:contain;
+    }
+    .hb-name {
+      font-family:'Rajdhani',sans-serif;
+      font-size:22px; font-weight:700; color:var(--text);
+      letter-spacing:0.04em; line-height:1.1;
+    }
+    .hb-addr { font-size:11px; color:var(--text3); line-height:1.4; margin-top:1px; }
+    .hr-right { flex-shrink:0; }
+    .uk-chip {
+      display:flex; align-items:center; gap:7px;
+      background: linear-gradient(135deg,#eef2ff,#f5f0ff);
+      border:1.5px solid var(--border2);
+      border-radius:10px; padding:6px 12px;
+      box-shadow: 0 2px 8px rgba(0,102,255,0.1);
+    }
+    .uk-chip .uf { font-size:16px; }
+    .uk-chip .us { width:1px; height:16px; background:var(--border2); }
+    .uk-chip .ut { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; color:var(--cyan); }
+    .uk-chip .ud { font-size:10px; color:var(--text3); font-weight:500; }
+
+    /* ── TABS ── */
+    .tab-nav {
+      flex-shrink:0; display:flex;
+      padding:0 24px;
+      background:var(--surface);
+      border-bottom:1.5px solid var(--border);
+      gap:4px;
+    }
+    .tab-btn {
+      flex:1; padding:10px 4px 9px;
+      background:none; border:none; cursor:pointer;
+      font-family:'Rajdhani',sans-serif;
+      font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+      color:var(--text3);
+      display:flex; flex-direction:column; align-items:center; gap:4px;
+      border-bottom:3px solid transparent;
+      transition:color .15s, border-color .15s;
+    }
+    .tab-btn i { font-size:18px; }
+    .tab-btn.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+    .tab-btn:hover:not(.active) { color:var(--text2); }
+
+    /* ── PANELS ── */
+    .panels { flex:1; overflow:hidden; position:relative; }
+    .panel {
+      position:absolute; inset:0;
+      overflow-y:auto; overflow-x:hidden;
+      padding:20px 24px 28px;
+      opacity:0; pointer-events:none;
+      transform:translateY(6px);
+      transition:opacity .18s, transform .18s;
+      display:flex; flex-direction:column; align-items:center;
+    }
+    .panel.active { opacity:1; pointer-events:all; transform:translateY(0); }
+    .panel::-webkit-scrollbar { width:4px; }
+    .panel::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
+
+    /* inner content max width */
+    .panel > * { width:100%; max-width:560px; }
+
+    /* ── SECTION LABEL ── */
+    .slbl {
+      font-family:'Rajdhani',sans-serif;
+      font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--text3); margin-bottom:6px;
+      display:flex; align-items:center; gap:6px;
+    }
+    .slbl::before {
+      content:''; display:inline-block; width:3px; height:13px;
+      background:linear-gradient(180deg,var(--cyan),var(--purple));
+      border-radius:2px; flex-shrink:0;
+    }
+    .slbl i { font-size:13px; }
+
+    /* ── MAIN TIMER CARD ── */
+    .timer-card {
+      background:var(--card);
+      border:1.5px solid var(--border2);
+      border-radius:var(--r2); padding:22px 20px 18px;
+      margin-bottom:12px; text-align:center;
+      position:relative; overflow:hidden;
+      box-shadow:0 4px 24px rgba(0,102,255,0.08), 0 1px 0 rgba(255,255,255,0.9) inset;
+    }
+    .timer-card::before {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(ellipse at 50% -10%, rgba(0,102,255,0.06) 0%, transparent 65%);
+    }
+    .timer-card::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+    }
+    .tlbl {
+      font-family:'Rajdhani',sans-serif;
+      font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--text3); margin-bottom:8px;
+    }
+    .tval {
+      font-family:'JetBrains Mono',monospace;
+      font-size:52px; font-weight:600; letter-spacing:-0.01em; line-height:1;
+      font-variant-numeric:tabular-nums; transition:color .3s,text-shadow .3s;
+      background:linear-gradient(135deg,var(--cyan),var(--purple));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .tval.urgent {
+      background:none; -webkit-text-fill-color:var(--red);
+      text-shadow:0 0 20px rgba(230,57,70,0.4);
+      animation:rpulse .8s ease-in-out infinite;
+    }
+    .tval.muted {
+      background:none; -webkit-text-fill-color:var(--text3);
+      font-size:32px; text-shadow:none;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .pbar-track {
+      width:100%; height:8px; border-radius:99px;
+      background:var(--card2); border:1px solid var(--border);
+      overflow:hidden; margin-top:16px; position:relative;
+    }
+    .pbar-fill {
+      height:100%; border-radius:99px;
+      background:linear-gradient(90deg,var(--cyan),var(--purple));
+      transition:width 1s linear, background .3s;
+      width:0%;
+    }
+    .pbar-fill.urgent {
+      background:linear-gradient(90deg,var(--red),#ff8a8a);
+    }
+    .pbar-lbl {
+      display:flex; justify-content:space-between;
+      font-family:'JetBrains Mono',monospace;
+      font-size:10px; color:var(--text3); margin-top:6px;
+      font-weight:500;
+    }
+    @keyframes rpulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+    /* ── BREAK CARD ── */
+    .break-card {
+      background:var(--card); border:1.5px solid var(--border);
+      border-radius:var(--r2); padding:14px 20px; margin-bottom:12px;
+      text-align:center;
+      box-shadow:0 2px 12px rgba(0,102,255,0.05);
+    }
+
+    /* ── PILL ── */
+    .pill {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 20px; border-radius:99px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:13px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+      border:1.5px solid transparent;
+    }
+    .pill.active   { background:rgba(0,200,83,0.08);  color:var(--green);  border-color:rgba(0,200,83,0.3);  box-shadow:0 0 14px rgba(0,200,83,0.12); }
+    .pill.on-break { background:rgba(255,143,0,0.08); color:var(--amber);  border-color:rgba(255,143,0,0.3);  box-shadow:0 0 14px rgba(255,143,0,0.12); }
+    .pill.closed   { background:var(--card2);          color:var(--text3);  border-color:var(--border); }
+    .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .dot.g { background:var(--green); box-shadow:0 0 6px var(--green); }
+    .dot.a { background:var(--amber); box-shadow:0 0 6px var(--amber); }
+    .dot.x { background:var(--text3); }
+
+    /* ── WEEKEND CARD ── */
+    .wknd-card {
+      background:var(--card);
+      border:1.5px solid rgba(124,58,237,0.25);
+      border-radius:var(--r2); padding:16px 20px; margin-bottom:12px;
+      text-align:center; position:relative; overflow:hidden;
+      box-shadow:0 4px 20px rgba(124,58,237,0.08);
+    }
+    .wknd-card::before {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(ellipse at 50% -10%, rgba(124,58,237,0.06) 0%, transparent 65%);
+    }
+    .wknd-card::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,transparent,var(--purple),transparent);
+    }
+    .wlbl {
+      font-family:'Rajdhani',sans-serif;
+      font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--purple); margin-bottom:8px; opacity:0.8;
+    }
+    .wval {
+      font-family:'JetBrains Mono',monospace;
+      font-size:30px; font-weight:600; letter-spacing:-0.01em;
+      font-variant-numeric:tabular-nums;
+      background:linear-gradient(135deg,var(--purple),var(--pink));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .wval.happy {
+      background:linear-gradient(135deg,var(--green),var(--teal));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+
+    /* ── WEATHER CARD ── */
+    .wx-card {
+      background:var(--card);
+      border:1.5px solid rgba(0,151,167,0.25);
+      border-radius:var(--r2); padding:16px 20px; margin-bottom:12px;
+      position:relative; overflow:hidden;
+      box-shadow:0 4px 20px rgba(0,151,167,0.07);
+    }
+    .wx-card::before {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(ellipse at 50% 110%, rgba(0,151,167,0.06) 0%, transparent 65%);
+    }
+    .wx-card::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,transparent,var(--teal),transparent);
+    }
+    .wx-inner { display:flex; align-items:center; justify-content:center; gap:0; width:100%; }
+    .wx-left { text-align:center; min-width:160px; }
+    .wx-temp {
+      font-family:'JetBrains Mono',monospace;
+      font-size:46px; font-weight:600; line-height:1;
+      background:linear-gradient(135deg,var(--teal),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .wx-feels { font-size:12px; color:var(--text3); margin-top:5px; font-weight:500; }
+    .wx-divider { width:1.5px; height:64px; background:var(--border2); flex-shrink:0; margin:0 20px; }
+    .wx-right { display:flex; gap:24px; }
+    .wx-sun { text-align:center; }
+    .wx-sun i { font-size:22px; display:block; margin-bottom:5px; }
+    .wx-sun.rise i { color:#ff9500; }
+    .wx-sun.set  i { color:#ff6030; }
+    .wx-sun-lbl {
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--text3); display:block; margin-bottom:3px;
+    }
+    .wx-sun-val { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; color:var(--text); }
+
+    /* ── GRID ── */
+    .g2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+    .mc {
+      background:var(--card); border:1.5px solid var(--border);
+      border-radius:var(--r); padding:13px 14px;
+      box-shadow:0 2px 8px rgba(0,102,255,0.04);
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .mc:hover { border-color:var(--border2); box-shadow:0 4px 16px rgba(0,102,255,0.1); }
+    .mc-l {
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--text3); display:flex; align-items:center; gap:5px; margin-bottom:6px;
+    }
+    .mc-l i { font-size:13px; color:var(--cyan); }
+    .mc-v { font-size:16px; font-weight:700; color:var(--text); }
+    .mc-s { font-size:11px; color:var(--text3); margin-top:2px; font-weight:500; }
+
+    /* ── ALERT ── */
+    .alert-bar {
+      background:linear-gradient(135deg,#eef2ff,#f5f0ff);
+      border:1.5px solid var(--border2);
+      border-radius:var(--r); padding:11px 16px; margin-bottom:12px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:14px; font-weight:700; letter-spacing:0.05em;
+      color:var(--text2);
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      box-shadow:0 2px 8px rgba(0,102,255,0.06);
+    }
+    .alert-bar i { font-size:17px; color:var(--cyan); }
+
+    /* ── PRAYER ── */
+    .prayer-card {
+      background:var(--card); border:1.5px solid var(--border);
+      border-radius:var(--r2); overflow:hidden; margin-bottom:12px;
+      box-shadow:0 4px 20px rgba(0,102,255,0.06);
+    }
+    .prayer-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:13px 18px; border-bottom:1px solid var(--border);
+      transition:background .15s;
+    }
+    .prayer-row:last-child { border-bottom:none; }
+    .prayer-row.is-next {
+      background:linear-gradient(90deg,rgba(0,102,255,0.05),transparent);
+      border-left:3px solid var(--cyan);
+    }
+    .pr-left { display:flex; align-items:center; gap:10px; }
+    .pr-name {
+      font-family:'Rajdhani',sans-serif;
+      font-size:16px; font-weight:600; letter-spacing:0.03em; color:var(--text2);
+    }
+    .prayer-row.is-next .pr-name { color:var(--cyan); }
+    .pr-badge {
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--cyan); background:rgba(0,102,255,0.08);
+      border:1px solid rgba(0,102,255,0.25); border-radius:5px; padding:2px 8px;
+    }
+    .pr-time {
+      font-family:'JetBrains Mono',monospace;
+      font-size:14px; font-weight:600; color:var(--text);
+    }
+    .prayer-row.is-next .pr-time { color:var(--cyan); }
+
+    /* ── HOLIDAYS ── */
+    .h-card {
+      background:var(--card); border:1.5px solid var(--border);
+      border-radius:var(--r2); padding:14px 16px;
+      margin-bottom:10px; display:flex; align-items:center; gap:16px;
+      box-shadow:0 2px 12px rgba(0,102,255,0.04);
+      position:relative; overflow:hidden;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .h-card::before {
+      content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+      background:linear-gradient(180deg,var(--cyan),var(--purple));
+      opacity:0; transition:opacity .2s;
+    }
+    .h-card:hover { border-color:var(--border2); box-shadow:0 4px 20px rgba(0,102,255,0.1); }
+    .h-card:hover::before { opacity:1; }
+    .h-card.past { opacity:0.3; }
+    .h-card.is-today { border-color:rgba(0,200,83,0.35); background:rgba(0,200,83,0.03); }
+    .h-num {
+      min-width:52px; text-align:center;
+      font-family:'JetBrains Mono',monospace;
+      font-size:30px; font-weight:700; color:var(--text); line-height:1;
+    }
+    .h-num.tc { color:var(--green); font-size:22px; }
+    .h-nl {
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.08em; color:var(--text3); margin-top:2px;
+    }
+    .h-div { width:1.5px; min-height:46px; background:var(--border2); flex-shrink:0; }
+    .h-info { flex:1; min-width:0; }
+    .h-name {
+      font-family:'Rajdhani',sans-serif;
+      font-size:16px; font-weight:700; letter-spacing:0.02em;
+      color:var(--text); margin-bottom:3px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .h-name i { font-size:15px; color:var(--purple); }
+    .h-date { font-size:12px; color:var(--text3); font-weight:500; }
+
+    /* ── FOOTER ── */
+    .footer {
+      font-family:'Rajdhani',sans-serif;
+      font-size:11px; font-weight:600; letter-spacing:0.06em;
+      color:var(--text3); text-align:center; padding:4px 0 6px;
+    }
+
+    /* ── CORNER DECO ── */
+    .cd { position:absolute; width:10px; height:10px; pointer-events:none; }
+    .cd.tl { top:0;left:0;  border-top:2px solid var(--cyan); border-left:2px solid var(--cyan); }
+    .cd.tr { top:0;right:0; border-top:2px solid var(--cyan); border-right:2px solid var(--cyan); }
+    .cd.bl { bottom:0;left:0;  border-bottom:2px solid var(--cyan); border-left:2px solid var(--cyan); }
+    .cd.br { bottom:0;right:0; border-bottom:2px solid var(--cyan); border-right:2px solid var(--cyan); }
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    .panel.active > *{animation:fadeUp .2s ease both}
+    .panel.active > *:nth-child(1){animation-delay:0s}
+    .panel.active > *:nth-child(2){animation-delay:.04s}
+    .panel.active > *:nth-child(3){animation-delay:.08s}
+    .panel.active > *:nth-child(4){animation-delay:.11s}
+    .panel.active > *:nth-child(5){animation-delay:.14s}
+    .panel.active > *:nth-child(n+6){animation-delay:.17s}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="hb">
+    <div class="hb-logo"><img src="data:image/png;base64,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" alt="Staff Asia Logo"/></div>
+    <div>
+      <div class="hb-name"><span style="color:#00c853;">Staff</span><span style="color:var(--text);">Asia</span></div>
+      <div class="hb-addr">Al Oli Center, House: 32, Road: 2, Block: E, Uposhohar, Sylhet</div>
+    </div>
+  </div>
+  <div class="hr-right">
+    <div class="uk-chip">
+      <span class="uf">🇬🇧</span>
+      <span class="us"></span>
+      <div>
+        <div class="ut" id="uk-time">--:--:--</div>
+        <div class="ud" id="uk-date">---</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(0)" id="tab0"><i class="ti ti-clock"></i>Office</button>
+  <button class="tab-btn"        onclick="switchTab(1)" id="tab1"><i class="ti ti-moon"></i>Prayer</button>
+  <button class="tab-btn"        onclick="switchTab(2)" id="tab2"><i class="ti ti-calendar-event"></i>Holidays</button>
+</nav>
+
+<div class="panels">
+
+  <!-- PANEL 0: OFFICE -->
+  <div class="panel active" id="panel0">
+
+    <div class="timer-card">
+      <div class="cd tl"></div><div class="cd tr"></div>
+      <div class="cd bl"></div><div class="cd br"></div>
+      <div class="tlbl" id="office-label">Time until office ends</div>
+      <div class="tval" id="office-timer">—</div>
+      <div class="pbar-track">
+        <div class="pbar-fill" id="pbar-fill"></div>
+      </div>
+      <div class="pbar-lbl">
+        <span id="pbar-start">—</span>
+        <span id="pbar-end">—</span>
+      </div>
+    </div>
+
+    <div class="break-card">
+      <div class="slbl" id="break-label" style="justify-content:center;margin-bottom:8px;">Break status</div>
+      <div class="pill closed" id="break-pill">
+        <span class="dot x" id="dot"></span>
+        <span id="break-text">Loading…</span>
+      </div>
+    </div>
+
+    <div class="wknd-card">
+      <div class="cd tl" style="border-color:var(--purple)"></div>
+      <div class="cd tr" style="border-color:var(--purple)"></div>
+      <div class="cd bl" style="border-color:var(--purple)"></div>
+      <div class="cd br" style="border-color:var(--purple)"></div>
+      <div class="wlbl">Time until weekend (Fri 6:00 PM)</div>
+      <div class="wval" id="weekend-timer">—</div>
+    </div>
+
+    <div class="wx-card">
+      <div class="cd tl" style="border-color:var(--teal)"></div>
+      <div class="cd tr" style="border-color:var(--teal)"></div>
+      <div class="cd bl" style="border-color:var(--teal)"></div>
+      <div class="cd br" style="border-color:var(--teal)"></div>
+      <div class="slbl" style="margin-bottom:12px;justify-content:center;"><i class="ti ti-cloud" style="color:var(--teal)"></i>Sylhet Weather</div>
+      <div class="wx-inner">
+        <div class="wx-left">
+          <div class="wx-temp" id="temp-val">—</div>
+          <div class="wx-feels" id="feels-val">Loading…</div>
+        </div>
+        <div class="wx-divider"></div>
+        <div class="wx-right">
+          <div class="wx-sun rise">
+            <i class="ti ti-sunrise"></i>
+            <span class="wx-sun-lbl">Sunrise</span>
+            <span class="wx-sun-val" id="sunrise-val">—</span>
+          </div>
+          <div class="wx-sun set">
+            <i class="ti ti-sunset"></i>
+            <span class="wx-sun-lbl">Sunset</span>
+            <span class="wx-sun-val" id="sunset-val">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="mc">
+        <div class="mc-l"><i class="ti ti-clock-hour-4"></i>Office hours</div>
+        <div class="mc-v">9:30 – 18:00</div>
+        <div class="mc-s">Mon – Fri</div>
+      </div>
+      <div class="mc">
+        <div class="mc-l"><i class="ti ti-coffee"></i>Break (Fri)</div>
+        <div class="mc-v">12:50 – 2:10</div>
+        <div class="mc-s">80 minutes</div>
+      </div>
+      <div class="mc">
+        <div class="mc-l"><i class="ti ti-coffee"></i>Break (Mon–Thu)</div>
+        <div class="mc-v">1:15 – 2:00</div>
+        <div class="mc-s">45 minutes</div>
+      </div>
+      <div class="mc">
+        <div class="mc-l"><i class="ti ti-map-pin"></i>Location</div>
+        <div class="mc-v">Sylhet, BD</div>
+        <div class="mc-s">Asia/Dhaka</div>
+      </div>
+    </div>
+
+    <div class="alert-bar" id="alert-bar">
+      <i class="ti ti-droplet"></i><span>Time to drink water!</span>
+    </div>
+
+    <div class="footer">© 2026 Tahmid. All rights reserved.</div>
+  </div>
+
+  <!-- PANEL 1: PRAYER -->
+  <div class="panel" id="panel1">
+    <div class="slbl"><i class="ti ti-moon-stars" style="color:var(--purple)"></i>Prayer times — Sylhet</div>
+    <div class="prayer-card">
+      <div class="prayer-row" id="row-fajr">
+        <div class="pr-left"><span class="pr-name">Fajr</span></div>
+        <span class="pr-time" id="p-fajr">—</span>
+      </div>
+      <div class="prayer-row" id="row-dhuhr">
+        <div class="pr-left"><span class="pr-name">Dhuhr</span></div>
+        <span class="pr-time" id="p-dhuhr">—</span>
+      </div>
+      <div class="prayer-row" id="row-asr">
+        <div class="pr-left"><span class="pr-name">Asr</span></div>
+        <span class="pr-time" id="p-asr">—</span>
+      </div>
+      <div class="prayer-row" id="row-maghrib">
+        <div class="pr-left"><span class="pr-name">Maghrib</span></div>
+        <span class="pr-time" id="p-maghrib">—</span>
+      </div>
+      <div class="prayer-row" id="row-isha">
+        <div class="pr-left"><span class="pr-name">Isha</span></div>
+        <span class="pr-time" id="p-isha">—</span>
+      </div>
+    </div>
+    <div class="footer">Prayer times via Aladhan API · Method: Karachi</div>
+  </div>
+
+  <!-- PANEL 2: HOLIDAYS -->
+  <div class="panel" id="panel2">
+    <div class="slbl"><i class="ti ti-calendar-event" style="color:var(--purple)"></i>Public holidays 2026</div>
+    <div id="holiday-list"></div>
+    <div class="footer">Bangladesh national holidays</div>
+  </div>
+
+</div>
+
+<script>
+  function pad(n){return String(n).padStart(2,'0');}
+  function fmtDur(s){
+    if(s<=0)return '0s';
+    const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+    return h>0?h+'h '+pad(m)+'m '+pad(sec)+'s':m+'m '+pad(sec)+'s';
+  }
+  function fmtDHMS(s){
+    const d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60),sec=s%60;
+    return d>0?d+'d '+pad(h)+'h '+pad(m)+'m '+pad(sec)+'s':h+'h '+pad(m)+'m '+pad(sec)+'s';
+  }
+
+  let currentTab=0;
+  function switchTab(i){
+    document.getElementById('panel'+currentTab).classList.remove('active');
+    document.getElementById('tab'+currentTab).classList.remove('active');
+    currentTab=i;
+    document.getElementById('panel'+i).classList.add('active');
+    document.getElementById('tab'+i).classList.add('active');
+  }
+
+  const OFFICE_START=9*60+30, OFFICE_END=18*60;
+  function getBreak(day){return day===5?{start:12*60+50,end:14*60+10}:{start:13*60+15,end:14*60};}
+
+  const HOLIDAYS=[
+    {name:'Ashura',             date:new Date(2026,5,26),  icon:'ti-moon-stars'},
+    {name:'July Uprising Day',  date:new Date(2026,7,5),   icon:'ti-flag-3'},
+    {name:'Eid e Miladun Nabi', date:new Date(2026,7,26),  icon:'ti-star-crescent'},
+    {name:'Victory Day',        date:new Date(2026,11,16), icon:'ti-award'},
+  ];
+
+  function renderHolidays(){
+    const today=new Date(); today.setHours(0,0,0,0);
+    const list=document.getElementById('holiday-list');
+    list.innerHTML='';
+    HOLIDAYS.forEach(h=>{
+      const hDate=new Date(h.date); hDate.setHours(0,0,0,0);
+      const diff=Math.round((hDate-today)/86400000);
+      const isPast=diff<0,isToday=diff===0;
+      const card=document.createElement('div');
+      card.className='h-card'+(isPast?' past':'')+(isToday?' is-today':'');
+      const dateStr=hDate.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+      let nb;
+      if(isToday)     nb=`<div class="h-num tc"><i class="ti ti-confetti"></i></div>`;
+      else if(isPast) nb=`<div class="h-num" style="font-size:14px;color:var(--text3)">Done</div>`;
+      else            nb=`<div class="h-num">${diff}</div><div class="h-nl">${diff===1?'day':'days'}</div>`;
+      card.innerHTML=`<div style="min-width:52px;text-align:center">${nb}</div>`+
+        `<div class="h-div"></div>`+
+        `<div class="h-info"><div class="h-name"><i class="ti ${h.icon}"></i>${h.name}</div><div class="h-date">${dateStr}</div></div>`;
+      list.appendChild(card);
+    });
+  }
+
+  const prayerTimeStr={};
+  let prayerTimes={};
+
+  function tick(){
+    const now=new Date();
+    const bdt=new Date(now.toLocaleString('en-US',{timeZone:'Asia/Dhaka'}));
+    const day=bdt.getDay(),isWeekday=day>=1&&day<=5;
+    const nowSecs=bdt.getHours()*3600+bdt.getMinutes()*60+bdt.getSeconds();
+    const nowMins=bdt.getHours()*60+bdt.getMinutes();
+    const offS=OFFICE_START*60,offE=OFFICE_END*60;
+    const brk=getBreak(day),brkS=brk.start*60,brkE=brk.end*60;
+
+    const ot=document.getElementById('office-timer'),ol=document.getElementById('office-label');
+    const pbf=document.getElementById('pbar-fill'),pbs=document.getElementById('pbar-start'),pbe=document.getElementById('pbar-end');
+    if(isWeekday&&nowSecs>=offS&&nowSecs<offE){
+      const left=offE-nowSecs;
+      ot.textContent=fmtDur(left);
+      const isUrgent = left<=300; // last 5 minutes
+      ot.className='tval'+(isUrgent?' urgent':'');
+      ol.textContent='Time until office ends (6:00 PM)';
+      const total=offE-offS;
+      const elapsed=nowSecs-offS;
+      const pct=Math.min(100,Math.max(0,(elapsed/total)*100));
+      pbf.style.width=pct+'%';
+      pbf.className='pbar-fill'+(isUrgent?' urgent':'');
+      pbs.textContent='9:30 AM';
+      pbe.textContent='6:00 PM';
+    } else if(isWeekday&&nowSecs<offS){
+      ot.textContent=fmtDur(offS-nowSecs); ot.className='tval';
+      ol.textContent='Time until office starts (9:30 AM)';
+      pbf.style.width='0%';
+      pbf.className='pbar-fill';
+      pbs.textContent='9:30 AM';
+      pbe.textContent='6:00 PM';
+    } else {
+      ot.textContent='CLOSED'; ot.className='tval muted';
+      ol.textContent='Office is closed';
+      pbf.style.width='0%';
+      pbf.className='pbar-fill';
+      pbs.textContent='9:30 AM';
+      pbe.textContent='6:00 PM';
+    }
+
+    const pill=document.getElementById('break-pill'),bt=document.getElementById('break-text');
+    const dot=document.getElementById('dot'),bl=document.getElementById('break-label');
+    const brkLbl=day===5?'Fri 12:50–2:10 PM':'Mon–Thu 1:15–2:00 PM';
+    if(!isWeekday||nowSecs>=offE||nowSecs<offS){
+      pill.className='pill closed';bt.textContent='Office closed';dot.className='dot x';bl.textContent='Break status';
+    } else if(nowSecs>=brkS&&nowSecs<brkE){
+      pill.className='pill on-break';bt.textContent='On break — '+fmtDur(brkE-nowSecs)+' left';dot.className='dot a';
+      bl.textContent='On break · '+brkLbl;
+    } else if(nowSecs<brkS){
+      pill.className='pill active';bt.textContent='Break in '+fmtDur(brkS-nowSecs);dot.className='dot g';
+      bl.textContent='Time until break · '+brkLbl;
+    } else {
+      pill.className='pill closed';bt.textContent='Break over for today';dot.className='dot x';
+      bl.textContent='Break status · '+brkLbl;
+    }
+
+    const wt=document.getElementById('weekend-timer');
+    if((day===5&&nowSecs>=offE)||day===6||day===0){
+      wt.textContent='Weekend! 🎉';wt.className='wval happy';
+    } else {
+      const diff=(5-day+7)%7*86400+(offE-nowSecs);
+      wt.textContent=fmtDHMS(Math.max(0,diff));wt.className='wval';
+    }
+
+    const alerts=['Time to drink water!','Stand up and stretch!','Check your posture!','Take a deep breath!'];
+    const aicons=['ti-droplet','ti-activity','ti-body-scan','ti-wind'];
+    const idx=Math.floor(bdt.getMinutes()/15)%4;
+    document.getElementById('alert-bar').innerHTML=`<i class="ti ${aicons[idx]}"></i><span>${alerts[idx]}</span>`;
+
+    const uk=new Date(now.toLocaleString('en-US',{timeZone:'Europe/London'}));
+    document.getElementById('uk-time').textContent=uk.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    document.getElementById('uk-date').textContent=uk.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+
+    if(Object.keys(prayerTimes).length>0) highlightNextPrayer(nowMins);
+  }
+
+  function highlightNextPrayer(nowMins){
+    const order=['fajr','dhuhr','asr','maghrib','isha'];
+    let next=null,minDiff=Infinity;
+    for(const k of order){
+      const v=prayerTimes[k];if(!v)continue;
+      const diff=v-nowMins;
+      if(diff>0&&diff<minDiff){minDiff=diff;next=k;}
+    }
+    for(const k of order){
+      const row=document.getElementById('row-'+k);
+      const existingBadge=row.querySelector('.pr-badge');
+      if(existingBadge)existingBadge.remove();
+      row.classList.remove('is-next');
+      if(prayerTimeStr[k])document.getElementById('p-'+k).textContent=prayerTimeStr[k];
+    }
+    if(next){
+      const row=document.getElementById('row-'+next);
+      row.classList.add('is-next');
+      const badge=document.createElement('span');
+      badge.className='pr-badge';badge.textContent='Next';
+      row.querySelector('.pr-left').appendChild(badge);
+    }
+  }
+
+  async function fetchPrayers(){
+    try{
+      const now=new Date();
+      const dd=pad(now.getDate()),mm=pad(now.getMonth()+1),yyyy=now.getFullYear();
+      const r=await fetch(`https://api.aladhan.com/v1/timingsByCity/${dd}-${mm}-${yyyy}?city=Sylhet&country=Bangladesh&method=1`);
+      const d=await r.json();const t=d.data.timings;
+      const toMins=s=>{const[h,m]=s.split(':');return parseInt(h)*60+parseInt(m);};
+      const fmt=s=>{const[h,m]=s.split(':');const hh=parseInt(h);return((hh%12)||12)+':'+m+' '+(hh>=12?'PM':'AM');};
+      const keys={Fajr:'fajr',Dhuhr:'dhuhr',Asr:'asr',Maghrib:'maghrib',Isha:'isha'};
+      for(const[api,id] of Object.entries(keys)){
+        const formatted=fmt(t[api]);
+        prayerTimeStr[id]=formatted;
+        document.getElementById('p-'+id).textContent=formatted;
+        prayerTimes[id]=toMins(t[api]);
+      }
+      const bdt=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Dhaka'}));
+      highlightNextPrayer(bdt.getHours()*60+bdt.getMinutes());
+    }catch(e){
+      ['fajr','dhuhr','asr','maghrib','isha'].forEach(k=>document.getElementById('p-'+k).textContent='—');
+    }
+  }
+
+  async function fetchWeather(){
+    try{
+      const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=24.8949&longitude=91.8687&current=temperature_2m,apparent_temperature&timezone=Asia/Dhaka');
+      const d=await r.json();
+      document.getElementById('temp-val').textContent=Math.round(d.current.temperature_2m)+'°C';
+      document.getElementById('feels-val').textContent='Feels like '+Math.round(d.current.apparent_temperature)+'°C';
+    }catch(e){
+      document.getElementById('temp-val').textContent='—';
+      document.getElementById('feels-val').textContent='Unavailable';
+    }
+  }
+
+  async function fetchSunTimes(){
+    try{
+      const r=await fetch('https://api.sunrise-sunset.org/json?lat=24.8949&lng=91.8687&formatted=0');
+      const d=await r.json();
+      const toLocal=iso=>new Date(iso).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true,timeZone:'Asia/Dhaka'});
+      document.getElementById('sunrise-val').textContent=toLocal(d.results.sunrise);
+      document.getElementById('sunset-val').textContent=toLocal(d.results.sunset);
+    }catch(e){}
+  }
+
+  renderHolidays();
+  tick();
+  setInterval(tick,1000);
+  fetchPrayers();
+  fetchWeather();
+  fetchSunTimes();
+</script>
+</body>
+</html>
